@@ -26,7 +26,7 @@ light.position.set(2,2,2);
 scene.add(light);
 
 const loader = new GLTFLoader();
-loader.load('./model.glb', (gltf) => {
+loader.load('https://hastartara.github.io/3d-glb-tests/model.glb', (gltf) => {
   const model = gltf.scene;
   scene.add(model);
 
@@ -40,3 +40,4 @@ loader.load('./model.glb', (gltf) => {
 </script>
 </body>
 </html>
+
