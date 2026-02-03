@@ -34,7 +34,7 @@
   // Load GLB from GitHub Pages
   const loader = new GLTFLoader();
   loader.load(
-    'https://hastartara.github.io/3d-glb-tests/model.glb', // your GLB URL
+    './model.glb', // your GLB URL
     function(gltf){
       const model = gltf.scene;
       scene.add(model);
@@ -64,5 +64,6 @@
 </script>
 </body>
 </html>
+
 
 
