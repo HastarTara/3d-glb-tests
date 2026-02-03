@@ -2,38 +2,48 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>3D test</title>
+  <title>3D GLB Test</title>
   <style>body{margin:0;overflow:hidden}</style>
 
-  <!-- Use minified global scripts, safe for Pages -->
+  <!-- Global scripts, safe for Pages -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 <script>
+  // Scene & camera
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x222222);
 
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
   camera.position.z = 5;
 
+  // Renderer
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-  const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(2,2,2);
-  scene.add(light);
+  // Lights
+  const ambient = new THREE.AmbientLight(0xffffff, 0.7);
+  scene.add(ambient);
 
-  // Use the global GLTFLoader (no imports!)
+  const directional = new THREE.DirectionalLight(0xffffff, 1);
+  directional.position.set(2,2,2);
+  scene.add(directional);
+
+  // Load GLB from GitHub Pages
   const loader = new THREE.GLTFLoader();
   loader.load(
-    'https://hastartara.github.io/3d-glb-tests/model.glb',
+    'https://hastartara.github.io/3d-glb-tests/model.glb', // your GLB URL
     function(gltf){
       const model = gltf.scene;
       scene.add(model);
 
+      // Optional: scale/position
+      model.scale.set(1,1,1);
+      model.position.set(0,0,0);
+
+      // Animation loop
       function animate(){
         model.rotation.y += 0.01;
         renderer.render(scene, camera);
@@ -42,8 +52,15 @@
       animate();
     },
     undefined,
-    function(error){ console.error(error); }
+    function(error){ console.error('Error loading GLB:', error); }
   );
+
+  // Resize handling
+  window.addEventListener('resize', function(){
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 </script>
 </body>
 </html>
