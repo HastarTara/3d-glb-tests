@@ -4,40 +4,43 @@
   <meta charset="utf-8">
   <title>3D test</title>
   <style>body{margin:0;overflow:hidden}</style>
+
+  <!-- Classic global scripts (no ES modules) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
-<script type="module">
-import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/addons/loaders/GLTFLoader.js';
+<script>
+  // Use globals directly
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x222222);
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x222222);
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.z = 5;
 
-const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 100);
-camera.position.z = 5;
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(innerWidth, innerHeight);
-document.body.appendChild(renderer.domElement);
+  // Lights
+  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(2,2,2);
+  scene.add(light);
 
-scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(2,2,2);
-scene.add(light);
+  // Loader
+  const loader = new THREE.GLTFLoader();
+  loader.load('https://hastartara.github.io/3d-glb-tests/model.glb', function(gltf){
+    const model = gltf.scene;
+    scene.add(model);
 
-const loader = new GLTFLoader();
-loader.load('https://hastartara.github.io/3d-glb-tests/model.glb', (gltf) => {
-  const model = gltf.scene;
-  scene.add(model);
-
-  function animate(){
-    model.rotation.y += 0.01;
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
-  }
-  animate();
-});
+    function animate(){
+      model.rotation.y += 0.01;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+  });
 </script>
 </body>
 </html>
-
