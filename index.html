@@ -5,13 +5,12 @@
   <title>3D test</title>
   <style>body{margin:0;overflow:hidden}</style>
 
-  <!-- Classic global scripts (no ES modules) -->
+  <!-- Use minified global scripts, safe for Pages -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 <script>
-  // Use globals directly
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x222222);
 
@@ -22,25 +21,29 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  // Lights
   scene.add(new THREE.AmbientLight(0xffffff, 0.7));
   const light = new THREE.DirectionalLight(0xffffff, 1);
   light.position.set(2,2,2);
   scene.add(light);
 
-  // Loader
+  // Use the global GLTFLoader (no imports!)
   const loader = new THREE.GLTFLoader();
-  loader.load('https://hastartara.github.io/3d-glb-tests/model.glb', function(gltf){
-    const model = gltf.scene;
-    scene.add(model);
+  loader.load(
+    'https://hastartara.github.io/3d-glb-tests/model.glb',
+    function(gltf){
+      const model = gltf.scene;
+      scene.add(model);
 
-    function animate(){
-      model.rotation.y += 0.01;
-      renderer.render(scene, camera);
-      requestAnimationFrame(animate);
-    }
-    animate();
-  });
+      function animate(){
+        model.rotation.y += 0.01;
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+      animate();
+    },
+    undefined,
+    function(error){ console.error(error); }
+  );
 </script>
 </body>
 </html>
